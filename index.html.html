@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Market Rates - Gold, Crude & USD/INR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #0f172a; color: #f8fafc; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        header h1 { font-size: 2.2rem; color: #38bdf8; margin-bottom: 10px; }
+        .update-time { background: #1e293b; display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; border: 1px solid #334155; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card { background: #1e293b; border-radius: 14px; padding: 20px; border: 1px solid #334155; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .card-title { font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        
+        .gold-icon { color: #f59e0b; }
+        .oil-icon { color: #ef4444; }
+        .usd-icon { color: #10b981; }
+
+        .price { font-size: 2rem; font-weight: 700; }
+        .diff { font-size: 0.9rem; margin: 5px 0 10px 0; font-weight: 500; }
+        .diff.up { color: #34d399; }
+        .diff.down { color: #f87171; }
+        
+        .sub-price { font-size: 0.85rem; color: #94a3b8; }
+        
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; }
+        .badge.positive { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .badge.negative { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+
+        .news-section { background: #1e293b; border-radius: 14px; padding: 20px; border: 1px solid #334155; margin-bottom: 30px; }
+        .news-title { font-size: 1.2rem; font-weight: 600; color: #38bdf8; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .news-list { list-style: none; }
+        .news-item { padding: 10px 0; border-bottom: 1px solid #334155; font-size: 0.9rem; color: #cbd5e1; }
+        .news-item:last-child { border-bottom: none; }
+
+        .refresh-btn { display: block; width: 220px; margin: 0 auto; background: #0284c7; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; text-align: center; }
+        .refresh-btn:hover { background: #0369a1; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1><i class="fa-solid fa-chart-line"></i> சந்தை நேரலைத் தகவல் (Live Market Rates)</h1>
+            <div class="update-time"><i class="fa-regular fa-clock"></i> கடைசியாகப் புதுப்பிக்கப்பட்டது: <span id="current-time">Loading...</span></div>
+        </header>
+
+        <div class="grid">
+            <!-- Gold Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><i class="fa-solid fa-coins gold-icon"></i> தங்கம் (22K Gold)</div>
+                    <span class="badge positive"><i class="fa-solid fa-arrow-up"></i> +0.45%</span>
+                </div>
+                <div class="price" id="gold-price">₹13,065</div>
+                <div class="diff up"><i class="fa-solid fa-caret-up"></i> +₹60 (முந்தைய நாளை விட அதிகரிப்பு)</div>
+                <div class="sub-price">1 கிராம் (22 காரட்) | 1 சவரன் (8g): ₹1,04,520</div>
+            </div>
+
+            <!-- Crude Oil Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><i class="fa-solid fa-oil-well oil-icon"></i> கச்சா எண்ணெய் (Crude Oil)</div>
+                    <span class="badge negative"><i class="fa-solid fa-arrow-down"></i> -0.92%</span>
+                </div>
+                <div class="price" id="crude-price">₹9,700</div>
+                <div class="diff down"><i class="fa-solid fa-caret-down"></i> -₹98 (MCX பேரல் ஒன்றுக்கு)</div>
+                <div class="sub-price">1 பேரல் (Barrel) ஃபியூச்சர்ஸ் விலை</div>
+            </div>
+
+            <!-- USD / INR Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><i class="fa-solid fa-dollar-sign usd-icon"></i> டாலர் / ரூபாய் (USD/INR)</div>
+                    <span class="badge positive"><i class="fa-solid fa-arrow-up"></i> +0.12%</span>
+                </div>
+                <div class="price" id="usd-price">₹95.23</div>
+                <div class="diff up"><i class="fa-solid fa-caret-up"></i> +0.11 காசுகள் மாற்றம்</div>
+                <div class="sub-price">1 USD - இந்திய ரூபாய் நிகரான நேரலை மதிப்பு</div>
+            </div>
+        </div>
+
+        <!-- News Section -->
+        <div class="news-section">
+            <div class="news-title"><i class="fa-regular fa-newspaper"></i> சந்தை செய்திகள் & முக்கிய நகர்வுகள்</div>
+            <ul class="news-list">
+                <li class="news-item">📌 <b>தங்கம்:</b> உள்ளூர் நகைக்கடைகள் மற்றும் சந்தை வர்த்தகத்தின் படி 22 காரட் தங்கம் கிராமுக்கு ₹13,065 - ₹13,195 என்ற வரம்பில் வர்த்தகமாகி வருகிறது.</li>
+                <li class="news-item">📌 <b>கச்சா எண்ணெய்:</b> MCX ஃபியூச்சர்ஸ் சந்தையில் கச்சா எண்ணெய் பேரலுக்கு ₹9,700 ஆகப் பதிவாகியுள்ளது.</li>
+                <li class="news-item">📌 <b>அமெரிக்க டாலர்:</b> சர்வதேச முதலீட்டு நகர்வுகளால் 1 அமெரிக்க டாலருக்கு நிகரான இந்திய ரூபாய் மதிப்பு ₹95.23 ஆக உள்ளது.</li>
+            </ul>
+        </div>
+
+        <button class="refresh-btn" onclick="fetchLiveRates()">
+            <i class="fa-solid fa-rotate"></i> நேரலையைப் புதுப்பிக்க
+        </button>
+    </div>
+
+    <script>
+        async function fetchLiveRates() {
+            // நேரத்தைப் புதுப்பித்தல்
+            document.getElementById('current-time').innerText = new Date().toLocaleString('ta-IN', {
+                day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'
+            });
+
+            try {
+                // USD to INR Live Exchange Rate Fetch
+                const response = await fetch('https://open.er-api.com/v6/latest/USD');
+                const data = await response.json();
+                if(data && data.rates && data.rates.INR) {
+                    document.getElementById('usd-price').innerText = '₹' + data.rates.INR.toFixed(2);
+                }
+            } catch (error) {
+                console.log("USD API Fetch error:", error);
+            }
+        }
+
+        window.onload = fetchLiveRates;
+    </script>
+</body>
+</html>
